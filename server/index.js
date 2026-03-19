@@ -24,10 +24,11 @@ const Student = require('./models/Student');
 
 app.post('/create', async (req, res) => {
   try {
-    const result = await Student.create(req.body);
-    res.json(result);
+    const result = await Student.create(req.body)
+    res.json(result)
   } catch (err) {
-    res.status(500).json(err);
+    console.error("CREATE ERROR:", err) 
+    res.status(500).json({ error: err.message })
   }
 });
 
