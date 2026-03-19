@@ -9,36 +9,57 @@ app.use(cors({
 }));
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
 
-// Model
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log("MongoDB Error:", err));
+
 const Student = require('./models/Student');
 
-// Routes
-app.post('/create', (req, res) => {
-  Student.create(req.body)
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.post('/create', async (req, res) => {
+  try {
+    const result = await Student.create(req.body);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-app.get('/students', (req, res) => {
-  Student.find()
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.get('/students', async (req, res) => {
+  try {
+    const result = await Student.find();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-app.put('/update/:id', (req, res) => {
-  Student.findByIdAndUpdate(req.params.id, req.body)
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.put('/update/:id', async (req, res) => {
+  try {
+    const result = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-app.delete('/delete/:id', (req, res) => {
-  Student.findByIdAndDelete(req.params.id)
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const result = await Student.findByIdAndDelete(req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 const PORT = process.env.PORT || 3001;
