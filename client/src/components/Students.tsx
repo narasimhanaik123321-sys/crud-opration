@@ -5,16 +5,20 @@ import { Link } from "react-router-dom"
 function Students() {
   const [students, setStudents] = useState<any[]>([])
 
+  const API_URL = "https://crud-opration-1.onrender.com"
+
   useEffect(() => {
-    axios.get("http://localhost:3001/students")
+    axios.get(`${API_URL}/students`)
       .then(res => setStudents(res.data))
+      .catch(err => console.log(err))
   }, [])
 
   const handleDelete = (id: string) => {
-    axios.delete(`http://localhost:3001/delete/${id}`)
+    axios.delete(`${API_URL}/delete/${id}`)
       .then(() => {
         setStudents(prev => prev.filter(s => s._id !== id))
       })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -31,7 +35,7 @@ function Students() {
             to="/create"
             className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-xl shadow-md transition duration-200"
           >
-             Add Student
+            Add Student
           </Link>
         </div>
 
@@ -65,14 +69,14 @@ function Students() {
                       to={`/update/${s._id}`}
                       className="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition"
                     >
-                       Edit
+                      Edit
                     </Link>
 
                     <button
                       onClick={() => handleDelete(s._id)}
                       className="px-3 py-1 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition"
                     >
-                       Delete
+                      Delete
                     </button>
 
                   </td>
@@ -84,7 +88,7 @@ function Students() {
 
           {students.length === 0 && (
             <div className="text-center p-6 text-gray-500">
-              No students found 
+              No students found
             </div>
           )}
 
