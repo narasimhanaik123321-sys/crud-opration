@@ -13,22 +13,21 @@ app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");
 });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log("MongoDB Error:", err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("MongoDB Error:", err));
 
 const Student = require('./models/Student');
 
 app.post('/create', async (req, res) => {
   try {
-    const result = await Student.create(req.body)
-    res.json(result)
+    console.log("REQUEST BODY:", req.body); // debug
+
+    const result = await Student.create(req.body);
+    res.json(result);
   } catch (err) {
-    console.error("CREATE ERROR:", err) 
-    res.status(500).json({ error: err.message })
+    console.error("CREATE ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -37,7 +36,8 @@ app.get('/students', async (req, res) => {
     const result = await Student.find();
     res.json(result);
   } catch (err) {
-    res.status(500).json(err);
+    console.error("GET ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -50,7 +50,8 @@ app.put('/update/:id', async (req, res) => {
     );
     res.json(result);
   } catch (err) {
-    res.status(500).json(err);
+    console.error("UPDATE ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -59,7 +60,8 @@ app.delete('/delete/:id', async (req, res) => {
     const result = await Student.findByIdAndDelete(req.params.id);
     res.json(result);
   } catch (err) {
-    res.status(500).json(err);
+    console.error("DELETE ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
