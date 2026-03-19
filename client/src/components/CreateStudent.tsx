@@ -16,7 +16,7 @@ function CreateStudent() {
     setLoading(true)
 
     try {
-      await axios.post(`${API_URL}/create`, { name, email, age })
+      await axios.post(`${API_URL}/create`, { name, email, age: Number(age) })
       navigate("/")
     } catch (error) {
       console.error(error)
